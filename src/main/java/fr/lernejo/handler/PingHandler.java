@@ -1,4 +1,4 @@
-package fr.lernejo.Handler;
+package fr.lernejo.handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

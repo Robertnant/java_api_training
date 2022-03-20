@@ -1,8 +1,8 @@
 package fr.lernejo.navy_battle;
 
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import fr.lernejo.Handler.PingHandler;
+import fr.lernejo.handler.PingHandler;
+import fr.lernejo.handler.PostHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,6 +10,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Launcher {
+    private static void handlePost(HttpServer server) {
+        server.createContext("/api/game/start").setHandler(new PostHandler());
+    }
     public static void main(String[] args) {
         if (args.length < 1) {
             throw new IllegalArgumentException("No port was given as argument. Please add one");
@@ -24,6 +27,7 @@ public class Launcher {
             // Create an executor service.
             final ExecutorService pool = Executors.newFixedThreadPool(poolSize);
             server.createContext("/ping").setHandler(new PingHandler());
+            handlePost(server);
         }
         catch (IOException e) {
             e.printStackTrace();
