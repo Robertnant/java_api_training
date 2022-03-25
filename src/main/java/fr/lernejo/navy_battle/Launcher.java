@@ -10,7 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Launcher {
-    private static void handlePost(HttpServer server) {
+    private static void createContext(HttpServer server) {
+        server.createContext("/ping").setHandler(new PingHandler());
         server.createContext("/api/game/start").setHandler(new PostHandler());
     }
     public static void main(String[] args) {
@@ -24,10 +25,15 @@ public class Launcher {
             // Create HTTP server.
             final HttpServer server = HttpServer.create(socketAddress, 0);
 
+            // Create server context.
+            createContext(server);
+
             // Create an executor service.
             final ExecutorService pool = Executors.newFixedThreadPool(poolSize);
-            server.createContext("/ping").setHandler(new PingHandler());
-            handlePost(server);
+            server.setExecutor(pool);
+
+            // Start server.
+            server.start();
         }
         catch (IOException e) {
             e.printStackTrace();
