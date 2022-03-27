@@ -7,9 +7,8 @@ import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class PostHandler implements HttpHandler {
     @Override
@@ -18,8 +17,10 @@ public class PostHandler implements HttpHandler {
         int responseCode;
         try (InputStream inputStream = getClass().getResourceAsStream("/schema.json")) {
             JSONObject rawSchema = new JSONObject(new JSONTokener(inputStream));
+
             Schema schema = SchemaLoader.load(rawSchema);
-            schema.validate(exchange.getRequestBody());
+            JSONObject obj = new JSONObject(new JSONTokener(exchange.getRequestBody()));
+            schema.validate(obj);
 
             // Send server response if JSON validates schema.
             body = "Accepted";
