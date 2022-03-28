@@ -19,8 +19,14 @@ public class Launcher {
             // Create HTTP server.
             final HttpServer server = HttpServer.create(socketAddress, 0);
 
-            // Create server context.
-            Tools serverTools = new Tools();
+            /**
+             * Create server context. Since any user is at the same time a server (uses handlers to listen to requests)
+             * and a client, a board is directly associated to the server.
+             * The server's adversary url will be the one of the other client which is retrieved by PostHandler when
+             * handler triggered for first time.
+             */
+            ClientTools serverClient = new ClientTools();
+            ServerTools serverTools = new ServerTools(serverClient.getBoard());
             serverTools.createContext(server);
 
             // Create an executor service.
@@ -30,9 +36,11 @@ public class Launcher {
             // Start server.
             server.start();
 
+            // TODO: should the server launch its own client? YES at it will have its own board.
+
             // Launch client.
             if (args.length > 1) {
-                serverTools.createClient(args[0], args[1]);
+                new ClientTools().startGame(args[0], args[1]);
             }
         } catch (IOException e) {
             e.printStackTrace();

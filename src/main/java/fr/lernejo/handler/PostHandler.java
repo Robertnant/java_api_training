@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 public class PostHandler implements HttpHandler {
     @Override
